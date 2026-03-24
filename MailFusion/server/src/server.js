@@ -6,7 +6,9 @@ const startEmailWorker = require('./workers/emailWorker');
 const startServer = async () => {
   try {
     await connectDB();
-    startEmailWorker();
+    if (env.ENABLE_EMAIL_WORKER) {
+      startEmailWorker();
+    }
 
     app.listen(env.PORT, () => {
       console.log(`Server running on port ${env.PORT}`);

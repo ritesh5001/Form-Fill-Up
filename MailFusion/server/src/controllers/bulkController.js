@@ -1,7 +1,7 @@
 const csv = require('csv-parser');
 const { Readable } = require('stream');
 const Campaign = require('../models/Campaign');
-const { emailQueue } = require('../queues/emailQueue');
+const { getEmailQueue } = require('../queues/emailQueue');
 const { getUserSettings } = require('../services/settingService');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -72,6 +72,8 @@ const sendBulkEmail = asyncHandler(async (req, res) => {
     status: 'pending',
     userId: req.user.id,
   });
+
+  const emailQueue = getEmailQueue();
 
   await Promise.all(
     recipients.map((recipient, index) =>

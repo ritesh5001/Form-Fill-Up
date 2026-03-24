@@ -1,5 +1,5 @@
 const { Worker } = require('bullmq');
-const { connection } = require('../queues/emailQueue');
+const { getQueueConnection } = require('../queues/emailQueue');
 const EmailLog = require('../models/EmailLog');
 const Campaign = require('../models/Campaign');
 const Template = require('../models/Template');
@@ -43,6 +43,8 @@ const updateCampaignProgress = async (campaignId, status) => {
 };
 
 const startEmailWorker = () => {
+  const connection = getQueueConnection();
+
   const worker = new Worker(
     'email-jobs',
     async (job) => {
