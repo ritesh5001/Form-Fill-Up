@@ -1,9 +1,24 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ quiet: true });
+}
+
+const resolvedMongoUri =
+  process.env.MONGO_URI ||
+  process.env.MONGODB_URI ||
+  process.env.DATABASE_URL ||
+  'mongodb://127.0.0.1:27017/mailfusion';
 
 const env = {
   NODE_ENV: process.env.NODE_ENV || 'development',
   PORT: Number(process.env.PORT || 5050),
-  MONGO_URI: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/mailfusion',
+  MONGO_URI: resolvedMongoUri,
+  MONGO_URI_SOURCE: process.env.MONGO_URI
+    ? 'MONGO_URI'
+    : process.env.MONGODB_URI
+    ? 'MONGODB_URI'
+    : process.env.DATABASE_URL
+    ? 'DATABASE_URL'
+    : 'default-localhost',
   JWT_SECRET: process.env.JWT_SECRET || 'change_me_jwt_secret',
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || '7d',
   CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
